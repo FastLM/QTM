@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quickmergepp"
+version = "0.1.0"
+description = "QuickMerge++: Fast Token Merging with Autoregressive Prior"
+readme = "README.md"
+authors = [
+  { name = "Dong Liu", email = "dong.liu.dl2367@yale.edu" },
+  { name = "Yanxuan Yu", email = "yy3523@columbia.edu" }
+]
+requires-python = ">=3.9"
+dependencies = [
+  "torch>=2.1",
+  "numpy>=1.24",
+  "scikit-learn>=1.3"
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/quickmergepp"
