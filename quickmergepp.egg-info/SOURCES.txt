@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+quickmergepp/__init__.py
+quickmergepp.egg-info/PKG-INFO
+quickmergepp.egg-info/SOURCES.txt
+quickmergepp.egg-info/dependency_links.txt
+quickmergepp.egg-info/requires.txt
+quickmergepp.egg-info/top_level.txt
+quickmergepp/quickmerge/__init__.py
+quickmergepp/quickmerge/ar_prior.py
+quickmergepp/quickmerge/entropy.py
+quickmergepp/quickmerge/merge.py
+quickmergepp/quickmerge/pipeline.py
