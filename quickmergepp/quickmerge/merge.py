@@ -2,6 +2,7 @@ from typing import Tuple
 import torch
 import torch.nn.functional as F
 from sklearn.cluster import KMeans
+from .kmeans_cuda import weighted_kmeans_assign, weighted_kmeans_update
 
 
 def gumbel_softmax_sample(logits: torch.Tensor, temperature: float) -> torch.Tensor:
@@ -27,14 +28,27 @@ def cluster_tokens(x: torch.Tensor, k: int, weights: torch.Tensor) -> torch.Tens
     """
     b, t, d = x.shape
     assignments = []
-    x_np = x.detach().cpu().numpy()
-    w_np = weights.detach().cpu().numpy()
-    for bi in range(b):
-        # KMeans in sklearn does not support sample_weight before v1.3 for kmeans, but we assume >=1.3
-        km = KMeans(n_clusters=k, n_init=5, random_state=0)
-        km.fit(x_np[bi], sample_weight=w_np[bi])
-        assignments.append(torch.from_numpy(km.labels_))
-    return torch.stack(assignments, dim=0).to(x.device)
+    if x.is_cuda:
+        # Simple fixed-iter k-means using CUDA kernels
+        for bi in range(b):
+            xb = x[bi]
+            wb = weights[bi]
+            # init centroids: random subset
+            idx = torch.randperm(t, device=xb.device)[:k]
+            centroids = xb.index_select(0, idx).contiguous()
+            for _ in range(10):
+                labels = weighted_kmeans_assign(xb, centroids)
+                centroids = weighted_kmeans_update(xb, wb, labels, k)
+            assignments.append(labels)
+        return torch.stack(assignments, dim=0)
+    else:
+        x_np = x.detach().cpu().numpy()
+        w_np = weights.detach().cpu().numpy()
+        for bi in range(b):
+            km = KMeans(n_clusters=k, n_init=5, random_state=0)
+            km.fit(x_np[bi], sample_weight=w_np[bi])
+            assignments.append(torch.from_numpy(km.labels_))
+        return torch.stack(assignments, dim=0).to(x.device)
 
 
 def merge_by_assignments(x: torch.Tensor, masses: torch.Tensor, assignments: torch.Tensor, k: int) -> torch.Tensor:
