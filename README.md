@@ -26,6 +26,15 @@ Demo
 python scripts/demo.py
 ```
 
+Benchmarks
+```bash
+# Method-level throughput/latency on synthetic inputs
+python scripts/bench_methods.py
+
+# CUDA k-means micro-benchmark (requires GPU)
+python scripts/bench_kmeans.py
+```
+
 Modules
 - Saliency: multi-scale attention entropy
 - Merge: Gumbel-Softmax selection + weighted k-means
