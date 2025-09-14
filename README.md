@@ -33,6 +33,36 @@ python scripts/bench_methods.py
 
 # CUDA k-means micro-benchmark (requires GPU)
 python scripts/bench_kmeans.py
+
+# Speculative decoding vs standard generation
+python scripts/bench_speculative.py
+```
+
+Speculative Decoding
+```python
+import torch
+from quickmergepp import create_speculative_decoder
+
+# Create speculative decoder with QuickMerge++ compression
+spec_decoder = create_speculative_decoder(
+    target_model=your_model,
+    vocab_size=1000,
+    dim=128,
+    quickmerge_dim=64,
+    k_max=32,
+    max_draft_len=4,
+    temperature=0.8
+)
+
+# Generate with speculative decoding
+generated_ids, stats = spec_decoder.generate(
+    input_ids=input_tokens,
+    hidden_states=encoder_hidden_states,
+    max_new_tokens=50
+)
+
+print(f"Speedup: {stats['avg_speedup']:.2f}x")
+print(f"Acceptance rate: {stats['acceptance_rate']:.2%}")
 ```
 
 Modules
