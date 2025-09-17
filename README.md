@@ -65,6 +65,29 @@ print(f"Speedup: {stats['avg_speedup']:.2f}x")
 print(f"Acceptance rate: {stats['acceptance_rate']:.2%}")
 ```
 
+Multimodal Applications
+```python
+from quickmergepp import create_multimodal_pipeline, create_diffusion_pipeline, create_llm_pipeline
+
+# Vision-Language
+multimodal = create_multimodal_pipeline(vision_dim=768, text_dim=512, k_max=64)
+fused_output, info = multimodal(vision_tokens, text_tokens)
+
+# Diffusion Models
+diffusion = create_diffusion_pipeline(unet_dim=768, text_dim=512, k_max=32)
+compressed_text, _ = diffusion.compress_text_embeddings(text_embeddings)
+
+# LLM Optimizations
+llm = create_llm_pipeline(model_dim=4096, k_max=128)
+compressed_k, compressed_v = llm.compress_kv_cache(key_cache, value_cache)
+```
+
+Examples
+```bash
+# Run comprehensive multimodal examples
+python scripts/examples_multimodal.py
+```
+
 Modules
 - Saliency: multi-scale attention entropy
 - Merge: Gumbel-Softmax selection + weighted k-means
