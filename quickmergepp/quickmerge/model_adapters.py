@@ -64,8 +64,8 @@ class LLMAdapter(nn.Module):
 class Qwen3Adapter(LLMAdapter):
     """Adapter for Qwen3 models."""
     
-    def __init__(self, model_name: str = "Qwen/Qwen2.5-7B-Instruct", **kwargs):
-        super().__init__(model_name, **kwargs)
+    def __init__(self, model_name: str = "Qwen/Qwen2.5-7B-Instruct", device: str = "auto", torch_dtype: torch.dtype = torch.float16):
+        super().__init__(model_name, device, torch_dtype)
         
     def load_model(self):
         """Load Qwen3 model and tokenizer."""
@@ -117,8 +117,8 @@ class Qwen3Adapter(LLMAdapter):
 class LLaMAAdapter(LLMAdapter):
     """Adapter for LLaMA models."""
     
-    def __init__(self, model_name: str = "meta-llama/Llama-2-7b-hf", **kwargs):
-        super().__init__(model_name, **kwargs)
+    def __init__(self, model_name: str = "meta-llama/Llama-2-7b-hf", device: str = "auto", torch_dtype: torch.dtype = torch.float16):
+        super().__init__(model_name, device, torch_dtype)
         
     def load_model(self):
         """Load LLaMA model and tokenizer."""
@@ -186,6 +186,8 @@ class DiffusionAdapter(nn.Module):
         
     def load_model(self):
         """Load diffusion model components."""
+        if not DIFFUSION_AVAILABLE or CLIPTokenizer is None or CLIPTextModel is None:
+            raise ImportError("diffusers or transformers library not available")
         try:
             # Load text encoder and tokenizer
             self.tokenizer = CLIPTokenizer.from_pretrained(self.model_name, subfolder="tokenizer")
