@@ -343,7 +343,7 @@ class UnifiedModelInterface:
         if use_compression:
             # Get hidden states and compress
             hidden_states = self.adapter.get_hidden_states(input_ids)
-            compressed_tokens, info = self.quickmerge.compress(hidden_states)
+            compressed_tokens, info = self.quickmerge.adaptive_compression(hidden_states[-1])
             
             # Use compressed tokens for generation (simplified approach)
             # In practice, you'd modify the model's forward pass to use compressed tokens
