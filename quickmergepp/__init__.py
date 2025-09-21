@@ -4,6 +4,10 @@ from .quickmerge.multimodal import (
     MultimodalQuickMerge, DiffusionQuickMerge, LLMQuickMerge,
     create_multimodal_pipeline, create_diffusion_pipeline, create_llm_pipeline
 )
+from .quickmerge.model_adapters import (
+    UnifiedModelInterface, create_model_interface,
+    Qwen3Adapter, LLaMAAdapter, DiffusionAdapter
+)
 
 __all__ = [
     "QuickMergePP", 
@@ -14,6 +18,11 @@ __all__ = [
     "LLMQuickMerge",
     "create_multimodal_pipeline",
     "create_diffusion_pipeline", 
-    "create_llm_pipeline"
+    "create_llm_pipeline",
+    "UnifiedModelInterface",
+    "create_model_interface",
+    "Qwen3Adapter",
+    "LLaMAAdapter", 
+    "DiffusionAdapter"
 ]
 

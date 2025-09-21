@@ -86,6 +86,37 @@ Examples
 ```bash
 # Run comprehensive multimodal examples
 python scripts/examples_multimodal.py
+
+# Run real model integration examples (requires actual models)
+python scripts/examples_real_models.py
+```
+
+Real Model Integration
+```python
+from quickmergepp import create_model_interface
+
+# Qwen3 with QuickMerge++
+qwen_interface = create_model_interface(
+    model_type="llm",
+    model_name="Qwen/Qwen2.5-7B-Instruct",
+    quickmerge_config={"dim": 4096, "k_max": 128}
+)
+
+# Generate with compression
+generated_text, info = qwen_interface.compress_and_generate(
+    "The future of AI is", max_new_tokens=50
+)
+
+# Stable Diffusion with compression
+diffusion_interface = create_model_interface(
+    model_type="diffusion", 
+    model_name="runwayml/stable-diffusion-v1-5"
+)
+
+# Compress text embeddings
+compressed_embeddings, info = diffusion_interface.compress_text_embeddings(
+    "A beautiful landscape"
+)
 ```
 
 Modules
